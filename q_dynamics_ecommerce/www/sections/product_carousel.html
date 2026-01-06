@@ -1,0 +1,177 @@
+<!-- Bootstrap Icons (Required for stars) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+/* Minimal CSS (only where Bootstrap can't help) */
+.product-img {
+    max-height: 180px;
+    object-fit: contain;
+}
+
+.heart-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+}
+</style>
+
+<section class="container my-4">
+
+  {# Fetch products from Website Item #}
+  {% set products = frappe.db.sql("""
+      SELECT
+          wi.item_name,
+          wi.item_code,
+          wi.route,
+          wi.website_image AS image,
+          (
+              SELECT ip.price_list_rate
+              FROM `tabItem Price` ip
+              WHERE ip.item_code = wi.item_code
+              LIMIT 1
+          ) AS price
+      FROM `tabWebsite Item` wi
+      WHERE wi.published = 1
+  """, as_dict=True) %}
+
+  {% set chunk_size = 4 %}
+  {% set total = products|length %}
+  {% set slides = (total // chunk_size) + (1 if total % chunk_size else 0) %}
+
+  <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+
+    <div class="carousel-inner">
+
+      {% for i in range(slides) %}
+        {% set start = i * chunk_size %}
+        {% set end = start + chunk_size %}
+
+        <div class="carousel-item {% if i == 0 %}active{% endif %}">
+          <div class="row g-4">
+
+            {% for product in products[start:end] %}
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+
+              <div class="card h-100 border rounded-4 shadow-sm position-relative p-3">
+
+                <a href="/{{ product.route }}" class="text-decoration-none text-dark">
+
+                  <!-- Product Name -->
+                  <div class="fw-semibold text-center mb-1 text-sm">
+                    {{ product.item_name }}
+                  </div>
+
+                  <!-- Rating -->
+                  <div class="d-flex justify-content-center align-items-center gap-1 mb-2">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star text-warning"></i>
+                    <small class="text-muted ms-1">(7)</small>
+                  </div>
+
+                  <!-- Image -->
+                  <div class="d-flex justify-content-center align-items-center mb-3">
+                    <img src="{{ product.image }}"
+                         class="img-fluid product-img"
+                         alt="{{ product.item_name }}">
+                  </div>
+
+                  <!-- Price -->
+                  {% if product.price %}
+                    <p class="fw-bold fs-6 text-center mb-1">
+                      ₹ {{ product.price }}
+                    </p>
+                  {% else %}
+                    <p class="text-muted text-center mb-1">
+                      Price Not Available
+                    </p>
+                  {% endif %}
+
+                  <!-- Purchases -->
+                  <p class="text-muted text-center small mb-0">
+                    93 Purchases
+                  </p>
+
+                </a>
+
+                <!-- Wishlist Button -->
+                <button
+                  class="btn btn-link text-danger p-0 heart-btn"
+                  onclick="event.preventDefault(); addToWishlist('{{ product.item_code }}', '{{ product.item_name }}');">
+                  ❤
+                </button>
+
+              </div>
+
+            </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+    </button>
+
+  </div>
+
+</section>
+
+<!-- ================================ -->
+<!-- CART + WISHLIST JS -->
+<!-- ================================ -->
+
+<script>
+// Common API handler
+function webshopCall(method, args, successTitle, successMessage) {
+    frappe.call({
+        method: method,
+        args: args,
+        callback: function(r) {
+            if (!r.exc) {
+                frappe.msgprint({
+                    title: successTitle,
+                    indicator: "green",
+                    message: successMessage
+                });
+            } else {
+                frappe.msgprint({
+                    title: "Error",
+                    indicator: "red",
+                    message: r.message || "Something went wrong"
+                });
+            }
+        }
+    });
+}
+
+// Add to Cart (kept for future use)
+function addToCart(item_code, item_name, qty = 1) {
+    webshopCall(
+        "webshop.webshop.shopping_cart.cart.update_cart",
+        { item_code, qty },
+        "Added to Cart",
+        `${item_name} added to your cart`
+    );
+}
+
+// Add to Wishlist
+function addToWishlist(item_code, item_name) {
+    webshopCall(
+        "webshop.webshop.doctype.wishlist.wishlist.add_to_wishlist",
+        { item_code },
+        "Wishlist Updated",
+        `${item_name} added to wishlist`
+    );
+}
+</script>
