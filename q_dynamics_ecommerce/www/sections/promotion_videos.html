@@ -1,80 +1,63 @@
-{% if promotion_videos and promotion_videos|length >= 5 %}
-<div class="container mt-2 mb-3">
+{% if promotion_videos and promotion_videos|length > 0 %}
+<div class="container mt-3 mb-4">
+
   <h4 class="text-center fw-semibold mb-3">
     Promotional Videos
   </h4>
 
-  <div id="promoVideoCarousel"
-       class="carousel slide"
-       data-bs-ride="carousel"
-       data-bs-interval="3000"
-       data-bs-pause="false"
-       data-bs-wrap="true">
+  <div class="promo-video-scroll">
 
-    <div class="carousel-inner">
+    {% for video in promotion_videos %}
+      {% if video.upload_videos %}
+      <div class="promo-video-card hover-play">
+        <video
+          class="promo-video"
+          muted
+          loop
+          playsinline
+          preload="metadata">
+          <source src="{{ frappe.utils.get_url(video.upload_videos) }}" type="video/mp4">
+        </video>
 
-      {% for i in range(promotion_videos|length - 4) %}
-        <div class="carousel-item {% if i == 0 %}active{% endif %}">
-          <div class="row justify-content-center g-3">
-
-            {% for video in promotion_videos[i:i+5] %}
-              {% if video.upload_videos %}
-                <div class="col-6 col-md-2 d-flex justify-content-center">
-
-                  <div class="video-wrapper hover-play">
-
-                    <video
-                      class="promo-video"
-                      loop
-                      playsinline
-                      preload="metadata"
-                      controlslist="nodownload nofullscreen noplaybackrate"
-                      disablepictureinpicture
-                    >
-                      <source
-                        src="{{ frappe.utils.get_url(video.upload_videos) }}"
-                        type="video/mp4">
-                    </video>
-
-                    <div class="play-overlay">▶</div>
-
-                  </div>
-
-                </div>
-              {% endif %}
-            {% endfor %}
-
-          </div>
-        </div>
-      {% endfor %}
-
-    </div>
-
-    <!-- Controls -->
-    <button class="carousel-control-prev" type="button"
-            data-bs-target="#promoVideoCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-
-    <button class="carousel-control-next" type="button"
-            data-bs-target="#promoVideoCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
+        <div class="play-overlay">▶</div>
+      </div>
+      {% endif %}
+    {% endfor %}
 
   </div>
+
 </div>
 {% endif %}
 
 <style>
-.video-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 150px;   /* narrow for vertical video */
-  aspect-ratio: 9/16; /* portrait orientation */
+.promo-video-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scroll-snap-type: x mandatory;
+}
+
+.promo-video-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.promo-video-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+/* Video card */
+.promo-video-card {
+  flex: 0 0 auto;
+  width: 150px;
+  aspect-ratio: 9 / 16;
   background: #000;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
+  position: relative;
   cursor: pointer;
+  scroll-snap-align: start;
 }
 
 .promo-video {
@@ -83,60 +66,45 @@
   object-fit: cover;
 }
 
+/* Play icon */
 .play-overlay {
   position: absolute;
   inset: 0;
   margin: auto;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.8);
-  color: rgba(255,255,255,0.9);
-  font-size: 28px;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.2s ease;
   pointer-events: none;
+  transition: opacity 0.2s;
 }
 
 .hover-play:hover .play-overlay {
   opacity: 0;
 }
-
-/* Remove browser video UI */
-video::-webkit-media-controls,
-video::-webkit-media-controls-play-button,
-video::-webkit-media-controls-start-playback-button {
-  display: none !important;
-}
-video::-moz-media-controls {
-  display: none !important;
-}
 </style>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const carouselEl = document.getElementById('promoVideoCarousel');
-  const carousel = bootstrap.Carousel.getOrCreateInstance(carouselEl);
 
-  document.querySelectorAll(".hover-play").forEach(wrapper => {
-    const video = wrapper.querySelector("video");
+  document.querySelectorAll(".hover-play").forEach(card => {
+    const video = card.querySelector("video");
 
-    video.muted = false;
-
-    wrapper.addEventListener("mouseenter", () => {
+    card.addEventListener("mouseenter", () => {
       video.currentTime = 0;
       video.play();
-      carousel.pause(); // Pause carousel while video plays
     });
 
-    wrapper.addEventListener("mouseleave", () => {
+    card.addEventListener("mouseleave", () => {
       video.pause();
       video.currentTime = 0;
-      carousel.cycle(); // Resume carousel
     });
   });
+
 });
 </script>

@@ -13,14 +13,17 @@ def get_context(context):
         order_by="name asc"
     )
 
-    # Promotion Videos Section
+    # Promotion Videos Section ✅
     context.promotion_videos = frappe.get_all(
         "Promotion Videos",
+        filters={"is_active": 1},
         fields=[
             "name",
-            "upload_videos"
+            "name1",
+            "upload_videos",
+            "order_sequence"
         ],
-        order_by="creation desc"
+        order_by="order_sequence asc"
     )
 
     # Hero Banner Section ✅
