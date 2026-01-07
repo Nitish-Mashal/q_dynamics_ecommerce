@@ -1,0 +1,142 @@
+{% if promotion_videos and promotion_videos|length >= 5 %}
+<div class="container mt-2 mb-3">
+  <h4 class="text-center fw-semibold mb-3">
+    Promotional Videos
+  </h4>
+
+  <div id="promoVideoCarousel"
+       class="carousel slide"
+       data-bs-ride="carousel"
+       data-bs-interval="3000"
+       data-bs-pause="false"
+       data-bs-wrap="true">
+
+    <div class="carousel-inner">
+
+      {% for i in range(promotion_videos|length - 4) %}
+        <div class="carousel-item {% if i == 0 %}active{% endif %}">
+          <div class="row justify-content-center g-3">
+
+            {% for video in promotion_videos[i:i+5] %}
+              {% if video.upload_videos %}
+                <div class="col-6 col-md-2 d-flex justify-content-center">
+
+                  <div class="video-wrapper hover-play">
+
+                    <video
+                      class="promo-video"
+                      loop
+                      playsinline
+                      preload="metadata"
+                      controlslist="nodownload nofullscreen noplaybackrate"
+                      disablepictureinpicture
+                    >
+                      <source
+                        src="{{ frappe.utils.get_url(video.upload_videos) }}"
+                        type="video/mp4">
+                    </video>
+
+                    <div class="play-overlay">▶</div>
+
+                  </div>
+
+                </div>
+              {% endif %}
+            {% endfor %}
+
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button"
+            data-bs-target="#promoVideoCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button"
+            data-bs-target="#promoVideoCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+
+  </div>
+</div>
+{% endif %}
+
+<style>
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 150px;   /* narrow for vertical video */
+  aspect-ratio: 9/16; /* portrait orientation */
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.promo-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.9);
+  font-size: 28px;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.hover-play:hover .play-overlay {
+  opacity: 0;
+}
+
+/* Remove browser video UI */
+video::-webkit-media-controls,
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
+video::-moz-media-controls {
+  display: none !important;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const carouselEl = document.getElementById('promoVideoCarousel');
+  const carousel = bootstrap.Carousel.getOrCreateInstance(carouselEl);
+
+  document.querySelectorAll(".hover-play").forEach(wrapper => {
+    const video = wrapper.querySelector("video");
+
+    video.muted = false;
+
+    wrapper.addEventListener("mouseenter", () => {
+      video.currentTime = 0;
+      video.play();
+      carousel.pause(); // Pause carousel while video plays
+    });
+
+    wrapper.addEventListener("mouseleave", () => {
+      video.pause();
+      video.currentTime = 0;
+      carousel.cycle(); // Resume carousel
+    });
+  });
+});
+</script>

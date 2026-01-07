@@ -1,0 +1,35 @@
+{% extends "templates/web.html" %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/q_dynamics_ecommerce/css/blog.css">
+{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom:20px;">My Blog Page</h1>
+
+<div class="card-wrapper">
+
+    <div class="blog-card">
+        <div class="card-header">
+            <span class="badge">Starting Solids</span>
+            <img src="/assets/q_dynamics_ecommerce/images/baby.jpg" alt="Baby Eating">
+        </div>
+
+        <div class="card-body">
+            <h3>Solid Starts - How to introduce food to babies</h3>
+            <p>
+                Starting solids means introducing your baby to soft, safe foods and
+                textures, when developmental readiness signs like good head control
+                are met.
+            </p>
+            <a href="#">Read More →</a>
+        </div>
+
+        <div class="card-footer">
+            November 19, 2025
+        </div>
+    </div>
+
+</div>
+{% endblock %}

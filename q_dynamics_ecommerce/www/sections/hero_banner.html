@@ -1,49 +1,78 @@
-<!-- HERO BANNER CAROUSEL -->
+{% if hero_banners and hero_banners|length > 0 %}
 <div id="heroBanner" class="carousel slide" data-bs-ride="carousel">
+
+  <!-- Indicators -->
+  <div class="carousel-indicators">
+    {% for banner in hero_banners %}
+      <button
+        type="button"
+        data-bs-target="#heroBanner"
+        data-bs-slide-to="{{ loop.index0 }}"
+        class="{% if loop.first %}active{% endif %}"
+        aria-current="{% if loop.first %}true{% endif %}">
+      </button>
+    {% endfor %}
+  </div>
+
+  <!-- Slides -->
   <div class="carousel-inner">
 
-    <div class="carousel-item active">
-      <img src="/files/Mob_Banner_Shop_Now_Pro-01.png" class="d-block w-100 hero-img">
-    </div>
+    {% for banner in hero_banners %}
+      <div class="carousel-item {% if loop.first %}active{% endif %}">
+        
+        {% if banner.link %}
+          <a href="{{ banner.link }} " target="_blank">
+            <img
+              src="{{ banner.attach_image }}"
+              class="d-block w-100 hero-img"
+              alt="{{ banner.name1 }}"
+            />
+          </a>
+        {% else %}
+          <img
+            src="{{ banner.attach_image }}"
+            class="d-block w-100 hero-img"
+            alt="{{ banner.name1 }}"
+          />
+        {% endif %}
 
-    <div class="carousel-item">
-      <img src="/files/Mob_Banner_Shop_Now_Pro-02.png" class="d-block w-100 hero-img">
-    </div>
-
-    <div class="carousel-item">
-      <img src="/files/Mob_Banner_Shop_Now_Pro-03.png" class="d-block w-100 hero-img">
-    </div>
-
-    <div class="carousel-item">
-      <img src="/files/Mob_Banner_Shop_Now_Pro-04.png" class="d-block w-100 hero-img">
-    </div>
-
-    <div class="carousel-item">
-      <img src="/files/Mob_Banner_Shop_Now_Pro-05.png" class="d-block w-100 hero-img">
-    </div>
-
-    <div class="carousel-item">
-      <img src="/files/Mob_Banner_Shop_Now_Pro-06.png" class="d-block w-100 hero-img">
-    </div>
+      </div>
+    {% endfor %}
 
   </div>
 
-  <button class="carousel-control-prev" type="button" data-bs-target="#heroBanner" data-bs-slide="prev">
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button"
+          data-bs-target="#heroBanner" data-bs-slide="prev">
     <span class="carousel-control-prev-icon"></span>
   </button>
 
-  <button class="carousel-control-next" type="button" data-bs-target="#heroBanner" data-bs-slide="next">
+  <button class="carousel-control-next" type="button"
+          data-bs-target="#heroBanner" data-bs-slide="next">
     <span class="carousel-control-next-icon"></span>
   </button>
+
 </div>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <style>
+/* Desktop */
 .hero-img {
     width: 100%;
-    height: auto;
-    object-fit: contain;
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Mobile - show FULL image */
+@media (max-width: 768px) {
+    .hero-img {
+        height: auto;
+        object-fit: contain;
+        max-height: 100vh;
+    }
 }
 </style>
 
-<!-- Bootstrap JS (REQUIRED) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

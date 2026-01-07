@@ -16,7 +16,7 @@
 </style>
 
 <section class="container my-4">
-
+    <h4 class="text-center">All Products</h4>
   {# Fetch products from Website Item #}
   {% set products = frappe.db.sql("""
       SELECT
@@ -126,6 +126,7 @@
   </div>
 
 </section>
+
 
 <!-- ================================ -->
 <!-- CART + WISHLIST JS -->
