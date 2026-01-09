@@ -1,0 +1,527 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+    /* @media (min-width: 1200px) {
+
+        .container-xl,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container {
+            max-width: 1290px !important;
+        }
+    } */
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #f6f8fb;
+    }
+
+    /* Hero */
+    .hero-banner {
+        position: relative;
+        min-height: 250px;
+        background:
+            linear-gradient(rgba(0, 167, 157, 0.65), rgba(0, 167, 157, 0.65)),
+            url("/assets/q_dynamics_ecommerce/images/about-banner.jpg") center/cover no-repeat;
+        display: flex;
+        align-items: center;
+    }
+
+
+    .hero-content {
+        color: #fff;
+    }
+
+    .hero-content h1 {
+        font-size: 36px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .hero-content p {
+        font-size: 16px;
+        font-weight: 500;
+        max-width: 500px;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        .hero-banner {
+            height: 280px;
+            text-align: center;
+        }
+
+        .hero-content p {
+            margin: 0 auto;
+        }
+    }
+
+    /* About section */
+    .about-section {
+        padding: 60px 0;
+    }
+
+    .about-section h4 {
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .about-section p {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.7;
+    }
+
+    .about-img {
+        max-height: 320px;
+        /* reduce image height */
+        width: auto;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto;
+        /* horizontal center */
+    }
+
+
+    /* Service cards */
+    .service-card {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        padding: 20px;
+        text-align: center;
+        height: 100%;
+    }
+
+    .service-card img {
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .service-card h6 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    /* Why us */
+    .why-us {
+        padding: 50px 0;
+    }
+
+    .why-us li {
+        list-style: none;
+        font-size: 14px;
+        color: #444;
+        margin-bottom: 10px;
+    }
+
+    .why-us li::before {
+        content: "✔";
+        color: #00a79d;
+        margin-right: 8px;
+    }
+
+    .help-banner {
+        background-color: #00a79d;
+        border-radius: 22px;
+        padding: 24px 30px;
+        color: #fff;
+        max-width: 650px;
+        margin: 40px auto;
+    }
+
+    .help-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .help-subtitle {
+        font-size: 15px;
+        opacity: 0.95;
+    }
+
+    .whatsapp-icon {
+        width: 80px;
+        height: 80px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+    }
+</style>
+
+<!-- HERO -->
+<section class="hero-banner">
+    <div class="container-fluid">
+        <div class="hero-content">
+            <h1>About Us</h1>
+            <p>Trusted Partner in Diagnostic and Health Care</p>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT CONTENT -->
+<section class="about-section">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <h4>About Our Ayurveda Care</h4>
+
+                <p>
+                    Ayurveda is an ancient system of holistic healing that focuses on maintaining
+                    balance between the mind, body, and spirit. By understanding an individual’s
+                    unique constitution, Ayurveda promotes natural wellness and long-term health.
+                </p>
+
+                <p>
+                    Our Ayurvedic care blends traditional therapies, herbal remedies, and lifestyle
+                    guidance to treat the root cause of health concerns, supporting safe, natural,
+                    and sustainable healing.
+                </p>
+
+                <h5 class="mt-4">Our Vision</h5>
+                <p>
+                    To be a trusted center of Ayurvedic wellness, empowering individuals to achieve
+                    balanced health through authentic, natural, and holistic healing practices.
+                </p>
+
+                <h5 class="mt-3">Our Mission</h5>
+                <p>
+                    To deliver personalized Ayurvedic care using time-tested treatments, expert
+                    guidance, and ethical practices that enhance well-being, immunity, and quality
+                    of life.
+                </p>
+            </div>
+
+
+            <div class="col-lg-4 text-center">
+                <img src="/assets/q_dynamics_ecommerce/images/ayur.jpg" class="img-fluid about-img">
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- SERVICES -->
+<section class="container pb-3">
+    <div class="row g-4">
+        <div class="container text-center">
+            <h4>Expert Ayurvedic Care For All</h4>
+            <p>Healing through nature, tailored for your wellness.</p>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card">
+                <img src="/assets/q_dynamics_ecommerce/images/ayurveda1.jpg" class="img-fluid">
+                <h6>Authentic Ayurvedic Care</h6>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card">
+                <img src="/assets/q_dynamics_ecommerce/images/ayurveda2.jpg" class="img-fluid">
+                <h6>Herbal Medicine Therapy</h6>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card">
+                <img src="/assets/q_dynamics_ecommerce/images/ayurveda3.jpg" class="img-fluid">
+                <h6>Panchakarma Treatments</h6>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="service-card">
+                <img src="/assets/q_dynamics_ecommerce/images/ayurveda4.jpg" class="img-fluid">
+                <h6>Ayurvedic Doctor Consultation</h6>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- WHY US -->
+<section class="why-us py-5">
+    <div class="container">
+        <h4 style="margin-bottom: 30px; ">Why You Should Choose Us</h4>
+        <div class="row g-4 justify-content-first">
+            <!-- Point 1 -->
+            <div class="col-md-4 d-flex ">
+                <div class="icon-circle me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" width="24"
+                        height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v2m0 14v2m8-8h2M2 12H0m15.364-6.364l1.414 1.414M4.222 19.778l1.414-1.414M19.778 19.778l-1.414-1.414M4.222 4.222l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                </div>
+                <span>Holistic Healing</span>
+            </div>
+
+            <!-- Point 2 -->
+            <div class="col-md-4 d-flex ">
+                <div class="icon-circle me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" width="24"
+                        height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7v10" />
+                    </svg>
+                </div>
+                <span>Authentic Formulations</span>
+            </div>
+
+            <!-- Point 3 -->
+            <div class="col-md-4 d-flex ">
+                <div class="icon-circle me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" width="24"
+                        height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M12 12a4 4 0 100-8 4 4 0 000 8z" />
+                    </svg>
+                </div>
+                <span>Expert Practitioners</span>
+            </div>
+
+            <!-- Point 4 -->
+            <div class="col-md-4 d-flex ">
+                <div class="icon-circle me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" width="24"
+                        height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v6m0 6v6m6-6h6M6 12H0M16 8l4 4M4 16l4-4" />
+                    </svg>
+                </div>
+                <span>Personalized Wellness</span>
+            </div>
+
+            <!-- Point 5 -->
+            <div class="col-md-4 d-flex ">
+                <div class="icon-circle me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" width="24"
+                        height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 7V3M10 7V3M5 21h14l-1-9H6l-1 9z" />
+                    </svg>
+                </div>
+                <span>Herbal Therapies</span>
+            </div>
+
+            <!-- Point 6 -->
+            <div class="col-md-4 d-flex ">
+                <div class="icon-circle me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" width="24"
+                        height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v2m0 14v2m8-8h2M2 12H0m15.364-6.364l1.414 1.414M4.222 19.778l1.414-1.414M19.778 19.778l-1.414-1.414M4.222 4.222l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                </div>
+                <span>Natural Vitality</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .icon-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #00a79d;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+
+
+<section class="team-section py-5" style="background-color: #f9f4ef;">
+    <div class="container">
+        <h4 class="text-center mb-5" style="color: #6b4c26;">Meet Our Ayurvedic Experts</h4>
+        <div class="row g-4">
+            <!-- Team Member 1 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="team-card text-center p-3 rounded shadow-sm" style="background-color: #fff8f0;">
+                    <img src="/assets/q_dynamics_ecommerce/images/user.png" class="img-fluid rounded-circle mb-3"
+                        alt="Dr. Meera">
+                    <h5 style="color: #6b4c26;">Dr. Meera Sharma</h5>
+                    <p style="color: #a67c52; font-style: italic;">Ayurvedic Physician</p>
+                </div>
+            </div>
+
+            <!-- Team Member 2 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="team-card text-center p-3 rounded shadow-sm" style="background-color: #fff8f0;">
+                    <img src="/assets/q_dynamics_ecommerce/images/user.png" class="img-fluid rounded-circle mb-3"
+                        alt="Dr. Rajesh">
+                    <h5 style="color: #6b4c26;">Dr. Rajesh Kumar</h5>
+                    <p style="color: #a67c52; font-style: italic;">Herbal Specialist</p>
+                </div>
+            </div>
+
+            <!-- Team Member 3 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="team-card text-center p-3 rounded shadow-sm" style="background-color: #fff8f0;">
+                    <img src="/assets/q_dynamics_ecommerce/images/user.png" class="img-fluid rounded-circle mb-3"
+                        alt="Dr. Anjali">
+                    <h5 style="color: #6b4c26;">Dr. Anjali Verma</h5>
+                    <p style="color: #a67c52; font-style: italic;">Panchakarma Therapist</p>
+                </div>
+            </div>
+
+            <!-- Team Member 4 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="team-card text-center p-3 rounded shadow-sm" style="background-color: #fff8f0;">
+                    <img src="/assets/q_dynamics_ecommerce/images/user.png" class="img-fluid rounded-circle mb-3"
+                        alt="Dr. Vikram">
+                    <h5 style="color: #6b4c26;">Dr. Vikram Singh</h5>
+                    <p style="color: #a67c52; font-style: italic;">Yoga & Wellness Expert</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .testimonial-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 30px 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: left;
+        height: 100%;
+    }
+
+    .testimonial-card img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+
+    .testimonial-card h5 {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #0b2c5a;
+    }
+
+    .testimonial-card p.position {
+        font-size: 0.9rem;
+        color: #00a79d;
+        /* Your theme color */
+        margin-bottom: 15px;
+    }
+
+    .testimonial-card p.testimonial-text {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+
+    .testimonial-card .quote {
+        font-size: 2rem;
+        color: #00a79d;
+        float: right;
+    }
+
+    .rating-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 30px 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        height: 100%;
+    }
+
+    .rating-card h2 {
+        font-size: 2rem;
+        color: #0b2c5a;
+        margin-bottom: 5px;
+    }
+
+    .rating-card span {
+        color: #ffc107;
+        /* star color */
+        font-size: 1.2rem;
+    }
+</style>
+</head>
+
+<body>
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="">Testimonials</h4>
+            <a href="#" class="text-decoration-none">View All &rarr;</a>
+        </div>
+
+        <div class="row g-4">
+            <!-- Card 1 -->
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Lee">
+                    <h5>Sarah Lee</h5>
+                    <p class="position">Frontend Developer</p>
+                    <p class="testimonial-text"><strong>Velit esse cillum dolore eu fugiat nulla pariatur excepteur
+                            sint.</strong> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                        eu fugiat nulla pariatur.</p>
+                    <span class="quote">&rdquo;</span>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="David Smith">
+                    <h5>David Smith</h5>
+                    <p class="position">Project Manager</p>
+                    <p class="testimonial-text"><strong>Excepteur sint occaecat cupidatat non proident sunt in
+                            culpa.</strong> Ut enim ad minima veniam quis nostrum exercitationem ullam corporis suscipit
+                        laboriosam.</p>
+                    <span class="quote">&rdquo;</span>
+                </div>
+            </div>
+
+            <!-- Card 3 (Rating Card) -->
+            <div class="col-md-4">
+                <div class="rating-card">
+                    <h2>4.9 <span>&#9733;&#9733;&#9733;&#9733;&#9733;</span></h2>
+                    <p class="fw-bold">Top-Rated Online Pathology Service</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="help-banner d-flex align-items-center justify-content-between">
+        <div>
+            <div class="help-title">
+                Can't find what you're looking for?
+            </div>
+            <div class="help-subtitle">
+                We are here to help. Say 'Hi' on WhatsApp
+            </div>
+        </div>
+
+        <div class="whatsapp-icon">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock %}

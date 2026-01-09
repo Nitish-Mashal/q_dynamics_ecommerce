@@ -1,25 +1,26 @@
 <section class="container my-4">
   <div class="position-relative mb-3">
     <h4 class="mb-0 text-center">All Products</h4>
-    <a href="/all-products" class="position-absolute top-50 end-0 translate-middle-y text-decoration-none text-black small">
+    <a href="/all-products"
+      class="position-absolute top-50 end-0 translate-middle-y text-decoration-none text-black small">
       View All
     </a>
   </div>
 
   {% set products = frappe.db.sql("""
-      SELECT
-          wi.item_name,
-          wi.item_code,
-          wi.route,
-          wi.website_image AS image,
-          (
-              SELECT ip.price_list_rate
-              FROM `tabItem Price` ip
-              WHERE ip.item_code = wi.item_code
-              LIMIT 1
-          ) AS price
-      FROM `tabWebsite Item` wi
-      WHERE wi.published = 1
+  SELECT
+  wi.item_name,
+  wi.item_code,
+  wi.route,
+  wi.website_image AS image,
+  (
+  SELECT ip.price_list_rate
+  FROM `tabItem Price` ip
+  WHERE ip.item_code = wi.item_code
+  LIMIT 1
+  ) AS price
+  FROM `tabWebsite Item` wi
+  WHERE wi.published = 1
   """, as_dict=True) %}
 
   <!-- Wrapper -->
@@ -54,16 +55,14 @@
 
             <!-- Image -->
             <div class="d-flex justify-content-center mb-3">
-              <img src="{{ product.image }}"
-                   class="img-fluid product-img"
-                   alt="{{ product.item_name }}">
+              <img src="{{ product.image }}" class="img-fluid product-img" alt="{{ product.item_name }}">
             </div>
 
             <!-- Price -->
             {% if product.price %}
-              <p class="fw-bold text-center mb-1">₹ {{ product.price }}</p>
+            <p class="fw-bold text-center mb-1">₹ {{ product.price }}</p>
             {% else %}
-              <p class="text-muted text-center mb-1">Price Not Available</p>
+            <p class="text-muted text-center mb-1">Price Not Available</p>
             {% endif %}
 
             <p class="text-muted text-center small mb-0">
@@ -92,110 +91,115 @@
 
 <style>
   .heart-btn i:hover {
-  color: #dc3545;
-}
+    color: #dc3545;
+  }
 
-.heart-btn:hover i {
-  font-weight: bold;
-}
+  .heart-btn:hover i {
+    font-weight: bold;
+  }
+
   .product-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
 
-.product-scroll {
-  display: flex;
-  gap: 16px;
-  overflow-x: hidden;
-  padding: 10px 50px;
-  scroll-behavior: smooth;
-}
+  .product-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: hidden;
+    padding: 10px 50px;
+    scroll-behavior: smooth;
+  }
 
-.product-card {
-  flex: 0 0 auto;
-  width: 260px;
-}
+  .product-card {
+    flex: 0 0 auto;
+    width: 260px;
+  }
 
-.product-img {
-  max-height: 180px;
-  object-fit: contain;
-}
+  .product-img {
+    max-height: 180px;
+    object-fit: contain;
+  }
 
-.heart-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-}
+  .heart-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+  }
 
-/* Arrow buttons */
-.product-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.15);
-  color: #fff;
-  border: none;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  font-size: 26px;
-  cursor: pointer;
-  z-index: 5;
-}
+  /* Arrow buttons */
+  .product-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.15);
+    color: #fff;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 5;
+  }
 
-.product-btn.prev { left: 0; }
-.product-btn.next { right: 0; }
+  .product-btn.prev {
+    left: 0;
+  }
 
+  .product-btn.next {
+    right: 0;
+  }
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
 
-  const container = document.querySelector(".product-scroll");
-  const prevBtn = document.querySelector(".product-btn.prev");
-  const nextBtn = document.querySelector(".product-btn.next");
+    const container = document.querySelector(".product-scroll");
+    const prevBtn = document.querySelector(".product-btn.prev");
+    const nextBtn = document.querySelector(".product-btn.next");
 
-  const CARD_WIDTH = 276; // card width + gap
-  let autoScrollInterval;
-  let isPaused = false;
+    const CARD_WIDTH = 276; // card width + gap
+    let autoScrollInterval;
+    let isPaused = false;
 
-  function startAutoScroll() {
-    stopAutoScroll();
-    autoScrollInterval = setInterval(() => {
-      if (!isPaused) {
-        container.scrollLeft += CARD_WIDTH;
+    function startAutoScroll() {
+      stopAutoScroll();
+      autoScrollInterval = setInterval(() => {
+        if (!isPaused) {
+          container.scrollLeft += CARD_WIDTH;
 
-        if (
-          container.scrollLeft + container.clientWidth >=
-          container.scrollWidth
-        ) {
-          container.scrollLeft = 0;
+          if (
+            container.scrollLeft + container.clientWidth >=
+            container.scrollWidth
+          ) {
+            container.scrollLeft = 0;
+          }
         }
-      }
-    }, 3000);
-  }
+      }, 3000);
+    }
 
-  function stopAutoScroll() {
-    clearInterval(autoScrollInterval);
-  }
+    function stopAutoScroll() {
+      clearInterval(autoScrollInterval);
+    }
 
-  startAutoScroll();
+    startAutoScroll();
 
-  function pauseAndResume() {
-    isPaused = true;
-    setTimeout(() => isPaused = false, 3000);
-  }
+    function pauseAndResume() {
+      isPaused = true;
+      setTimeout(() => isPaused = false, 3000);
+    }
 
-  nextBtn.addEventListener("click", () => {
-    container.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
-    pauseAndResume();
+    nextBtn.addEventListener("click", () => {
+      container.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
+      pauseAndResume();
+    });
+
+    prevBtn.addEventListener("click", () => {
+      container.scrollBy({ left: -CARD_WIDTH, behavior: "smooth" });
+      pauseAndResume();
+    });
+
   });
-
-  prevBtn.addEventListener("click", () => {
-    container.scrollBy({ left: -CARD_WIDTH, behavior: "smooth" });
-    pauseAndResume();
-  });
-
-});
 </script>
