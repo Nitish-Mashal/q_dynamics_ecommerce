@@ -9,4 +9,19 @@
   {% include "www/sections/product_carousel.html" %}
   {% include "www/sections/promotion_videos.html" %}
 
+  {# =============================== #}
+  {# PRODUCTS BY TAG: Best Sellers  #}
+  {# =============================== #}
+
+  {% set best_sellers = frappe.call(
+      "q_dynamics_ecommerce.api.products.get_products_by_tag",
+      tag="home_best_sellers"
+  ) %}
+
+  {% set title = "Best Sellers" %}
+  {% set products = best_sellers %}
+  {% include "www/sections/products_by_tag.html" %}
+
+  {% include "www/sections/whatsapp.html" %}
+
 {% endblock %}

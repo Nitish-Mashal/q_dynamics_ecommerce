@@ -1,26 +1,15 @@
-<section class="container my-4">
+{% if products and products|length %}
+
+<section class="container my-5">
+
+  <!-- Heading -->
   <div class="position-relative mb-3">
-    <h4 class="mb-0 text-center">All Products</h4>
-    <a href="/all-products" class="position-absolute top-50 end-0 translate-middle-y text-decoration-none text-black small">
+    <h4 class="mb-0 text-center">{{ title }}</h4>
+    <a href="/all-products"
+       class="position-absolute top-50 end-0 translate-middle-y text-decoration-none text-black small">
       View All
     </a>
   </div>
-
-  {% set products = frappe.db.sql("""
-      SELECT
-          wi.item_name,
-          wi.item_code,
-          wi.route,
-          wi.website_image AS image,
-          (
-              SELECT ip.price_list_rate
-              FROM `tabItem Price` ip
-              WHERE ip.item_code = wi.item_code
-              LIMIT 1
-          ) AS price
-      FROM `tabWebsite Item` wi
-      WHERE wi.published = 1
-  """, as_dict=True) %}
 
   <!-- Wrapper -->
   <div class="product-wrapper">
@@ -31,55 +20,46 @@
     <!-- Scroll Container -->
     <div class="product-scroll">
 
-      {% for product in products %}
-      <div class="product-card">
+      {% for item in products %}
+        <div class="product-card">
+        <a href="{{ item.route }}" class="text-decoration-none text-dark d-block h-100">
+            <div class="card h-100 border rounded-4 shadow-sm position-relative p-3">
 
-        <div class="card h-100 border rounded-4 shadow-sm position-relative p-3">
-
-          <a href="/{{ product.route }}" class="text-decoration-none text-dark">
-
+            <!-- Name -->
             <div class="fw-semibold text-center mb-1">
-              {{ product.item_name }}
+                {{ item.item_name }}
             </div>
 
             <!-- Rating -->
             <div class="d-flex justify-content-center gap-1 mb-2">
-              <i class="bi bi-star-fill text-warning"></i>
-              <i class="bi bi-star-fill text-warning"></i>
-              <i class="bi bi-star-fill text-warning"></i>
-              <i class="bi bi-star-fill text-warning"></i>
-              <i class="bi bi-star text-warning"></i>
-              <small class="text-muted ms-1">(7)</small>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star text-warning"></i>
+                <small class="text-muted ms-1">(7)</small>
             </div>
 
             <!-- Image -->
             <div class="d-flex justify-content-center mb-3">
-              <img src="{{ product.image }}"
-                   class="img-fluid product-img"
-                   alt="{{ product.item_name }}">
+                <img src="{{ item.image or '/assets/frappe/images/no-image.png' }}"
+                    class="img-fluid product-img"
+                    alt="{{ item.item_name }}">
             </div>
 
             <!-- Price -->
-            {% if product.price %}
-              <p class="fw-bold text-center mb-1">₹ {{ product.price }}</p>
-            {% else %}
-              <p class="text-muted text-center mb-1">Price Not Available</p>
-            {% endif %}
-
-            <p class="text-muted text-center small mb-0">
-              93 Purchases
+            <p class="fw-bold text-center mb-1">
+                ₹ {{ item.standard_rate }}
             </p>
 
-          </a>
+            <p class="text-muted text-center small mb-0">
+                93 Purchases
+            </p>
 
-          <!-- Wishlist -->
-          <!-- <button class="btn btn-link p-0 heart-btn" onclick="event.preventDefault(); addToWishlist('{{ product.item_code }}','{{ product.item_name }}');">
-            <i class="bi bi-heart text-danger fs-5"></i>
-          </button> -->
-
+            </div>
+        </a>
         </div>
 
-      </div>
       {% endfor %}
 
     </div>
@@ -90,15 +70,11 @@
   </div>
 </section>
 
-<style>
-  .heart-btn i:hover {
-  color: #dc3545;
-}
+{% endif %}
 
-.heart-btn:hover i {
-  font-weight: bold;
-}
-  .product-wrapper {
+
+<style>
+.product-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -122,12 +98,6 @@
   object-fit: contain;
 }
 
-.heart-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-}
-
 /* Arrow buttons */
 .product-btn {
   position: absolute;
@@ -146,8 +116,8 @@
 
 .product-btn.prev { left: 0; }
 .product-btn.next { right: 0; }
-
 </style>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -156,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const prevBtn = document.querySelector(".product-btn.prev");
   const nextBtn = document.querySelector(".product-btn.next");
 
-  const CARD_WIDTH = 276; // card width + gap
+  const CARD_WIDTH = 276;
   let autoScrollInterval;
   let isPaused = false;
 
@@ -166,10 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!isPaused) {
         container.scrollLeft += CARD_WIDTH;
 
-        if (
-          container.scrollLeft + container.clientWidth >=
-          container.scrollWidth
-        ) {
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
           container.scrollLeft = 0;
         }
       }
