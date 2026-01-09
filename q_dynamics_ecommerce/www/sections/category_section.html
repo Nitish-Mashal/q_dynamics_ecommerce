@@ -1,25 +1,30 @@
-<div class="container my-3">
+<section class="container my-4">
 
-  <h4 class="text-center fw-semibold mb-4">
+  <h4 class="text-center fw-semibold mb-3">
     Most popular categories
   </h4>
 
-  <div class="d-flex justify-content-center flex-wrap gap-4">
+  <!-- Wrapper -->
+  <div class="category-wrapper">
 
-    {% for group in item_groups %}
+    <!-- Left Arrow -->
+    <button class="category-btn prev">‹</button>
+
+    <!-- Scroll Container -->
+    <div class="category-scroll">
+
+      {% for group in item_groups %}
       <a href="/{{ group.route }}"
          class="category-circle-link text-center text-decoration-none">
 
         <div class="category-circle">
-
           {% if group.image %}
             <img src="{{ group.image }}" alt="{{ group.name }}">
           {% else %}
-            <span class="category-abbr fw-bold fs-3">
+            <span class="category-abbr">
               {{ frappe.utils.get_abbr(group.name) }}
             </span>
           {% endif %}
-
         </div>
 
         <div class="category-label fw-bold">
@@ -27,49 +32,144 @@
         </div>
 
       </a>
-    {% endfor %}
+      {% endfor %}
+
+    </div>
+
+    <!-- Right Arrow -->
+    <button class="category-btn next">›</button>
 
   </div>
-
-</div>
+</section>
 
 <style>
-    .category-circle-link {
-  width: 110px;
+/* Wrapper */
+.category-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
+/* Scroll container */
+.category-scroll {
+  display: flex;
+  gap: 24px;
+  overflow-x: hidden;
+  padding: 10px 50px;
+  scroll-behavior: smooth;
+}
+
+/* Category card */
+.category-circle-link {
+  flex: 0 0 auto;
+  width: 110px;
+  color: inherit;
+}
+
+/* Circle */
 .category-circle {
   width: 90px;
   height: 90px;
   border-radius: 50%;
   background-color: #e6f6f4;
+  overflow: hidden;          /* IMPORTANT */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 10px;
-  transition: transform 0.2s ease;
 }
 
 .category-circle img {
-  width: 45px;
-  height: 45px;
-  object-fit: contain;
+  width: 100%;               /* FILL circle */
+  height: 100%;
+  object-fit: cover;         /* CROP properly */
 }
 
 .category-circle:hover {
   transform: scale(1.05);
 }
 
+/* Abbreviation */
 .category-abbr {
-  font-weight: 600;
+  font-weight: 700;
   color: #00a39b;
-  font-size: 14px;
+  font-size: 20px;
 }
 
+/* Label */
 .category-label {
   font-size: 13px;
   color: #222;
   line-height: 1.3;
 }
 
+/* Arrow buttons */
+.category-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.15);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 26px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.category-btn.prev { left: 0; }
+.category-btn.next { right: 0; }
 </style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const container = document.querySelector(".category-scroll");
+  const prevBtn = document.querySelector(".category-btn.prev");
+  const nextBtn = document.querySelector(".category-btn.next");
+
+  const CARD_WIDTH = 134; // 110 width + gap
+  let autoScrollInterval;
+  let isPaused = false;
+
+  function startAutoScroll() {
+    stopAutoScroll();
+    autoScrollInterval = setInterval(() => {
+      if (!isPaused) {
+        container.scrollLeft += CARD_WIDTH;
+
+        if (
+          container.scrollLeft + container.clientWidth >=
+          container.scrollWidth
+        ) {
+          container.scrollLeft = 0;
+        }
+      }
+    }, 3000);
+  }
+
+  function stopAutoScroll() {
+    clearInterval(autoScrollInterval);
+  }
+
+  startAutoScroll();
+
+  function pauseAndResume() {
+    isPaused = true;
+    setTimeout(() => isPaused = false, 3000);
+  }
+
+  nextBtn.addEventListener("click", () => {
+    container.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
+    pauseAndResume();
+  });
+
+  prevBtn.addEventListener("click", () => {
+    container.scrollBy({ left: -CARD_WIDTH, behavior: "smooth" });
+    pauseAndResume();
+  });
+
+});
+</script>

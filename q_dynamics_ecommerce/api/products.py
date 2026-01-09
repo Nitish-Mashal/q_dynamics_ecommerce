@@ -23,13 +23,17 @@ def get_products_by_tag(tag):
     """, tag, as_dict=True)
 
     for p in products:
-        # prepend slash for frontend
-        if p.get("route"):
-            p["route"] = f"/{p['route']}"
-        else:
-            p["route"] = "#"
-
-        if not p.get("image"):
-            p["image"] = "/assets/frappe/images/no-image.png"
+        p["route"] = f"/{p['route']}" if p.get("route") else "#"
+        p["image"] = p.get("image") or "/assets/frappe/images/no-image.png"
 
     return products
+
+
+@frappe.whitelist()
+def get_product_tags():
+    return frappe.db.sql("""
+        SELECT DISTINCT tag
+        FROM `tabTag Link`
+        WHERE document_type = 'Item'
+        ORDER BY tag
+    """, as_dict=True)
