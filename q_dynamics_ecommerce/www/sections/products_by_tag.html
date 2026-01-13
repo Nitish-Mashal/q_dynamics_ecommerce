@@ -1,18 +1,20 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
 <section class="container my-5" id="products-by-tag-section">
 
-  <!-- Heading -->
-  <div class="position-relative mb-3">
-    <h4 class="mb-0 text-center">Products</h4>
-    <a href="/all-products"
-       class="position-absolute top-50 end-0 translate-middle-y text-decoration-none text-black small">
+  <!-- Heading Row -->
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
+
+    <!-- Empty div for left alignment (optional) -->
+    <div></div>
+
+    <!-- Centered Tag Buttons -->
+    <div class="d-flex justify-content-center gap-2 flex-wrap" id="tag-buttons"></div>
+
+    <!-- View All button aligned right -->
+    <a href="/all-products" class="text-decoration-none text-black small ms-2">
       View All
     </a>
+    
   </div>
-
-  <!-- TAG BUTTONS -->
-  <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap" id="tag-buttons"></div>
 
   <!-- PRODUCT WRAPPER -->
   <div class="product-wrapper">
@@ -31,6 +33,21 @@
   position: relative;
   display: flex;
   align-items: center;
+}
+/* Ensure product names wrap properly inside the card */
+.product-card .fw-semibold {
+    white-space: normal;        
+    word-break: break-word;     
+    overflow: hidden;           
+    text-overflow: ellipsis;    
+    display: -webkit-box;          
+    -webkit-box-orient: vertical;
+}
+.product-card a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
 }
 
 .product-scroll {
@@ -66,6 +83,22 @@
   cursor: pointer;
   z-index: 5;
 }
+
+#products-by-tag-section .d-flex.align-items-center {
+  gap: 10px;
+}
+
+#tag-buttons {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#products-by-tag-section a {
+  white-space: nowrap;
+}
+
 
 .product-btn.prev { left: 0; }
 .product-btn.next { right: 0; }
@@ -130,13 +163,17 @@ document.addEventListener("DOMContentLoaded", function () {
     products.forEach(item => {
       productScroll.insertAdjacentHTML("beforeend", `
         <div class="product-card">
-          <a href="${item.route}" class="text-decoration-none text-dark d-block h-100">
-            <div class="card h-100 border rounded-4 shadow-sm p-3">
 
+          <div class="card h-100 border rounded-4 shadow-sm position-relative p-3">
+
+            <a href="${item.route}" class="text-decoration-none text-dark">
+
+              <!-- Product Name -->
               <div class="fw-semibold text-center mb-1">
                 ${item.item_name}
               </div>
 
+              <!-- Rating -->
               <div class="d-flex justify-content-center gap-1 mb-2">
                 <i class="bi bi-star-fill text-warning"></i>
                 <i class="bi bi-star-fill text-warning"></i>
@@ -146,27 +183,38 @@ document.addEventListener("DOMContentLoaded", function () {
                 <small class="text-muted ms-1">(7)</small>
               </div>
 
+              <!-- Image -->
               <div class="d-flex justify-content-center mb-3">
-                <img src="${item.image}" class="img-fluid product-img">
+                <img src="${item.image}" class="img-fluid product-img" alt="${item.item_name}">
               </div>
 
-              <p class="fw-bold text-center mb-1">
-                ₹ ${item.standard_rate}
-              </p>
+              <!-- Price -->
+              ${item.standard_rate 
+                ? `<p class="fw-bold text-center mb-1">₹ ${item.standard_rate}</p>` 
+                : `<p class="text-muted text-center mb-1">Price Not Available</p>`}
 
-              <p class="text-muted text-center small mb-0">
-                93 Purchases
-              </p>
+              <!-- Purchases -->
+              <p class="text-muted text-center small mb-0">93 Purchases</p>
 
-            </div>
-          </a>
+            </a>
+
+            <!-- Optional Wishlist Button -->
+            <!--
+            <button class="btn btn-link p-0 heart-btn" onclick="event.preventDefault(); addToWishlist('${item.item_code}','${item.item_name}');">
+              <i class="bi bi-heart text-danger fs-5"></i>
+            </button>
+            -->
+
+          </div>
+
         </div>
       `);
     });
 
     productScroll.scrollLeft = 0;
-    startAutoScroll();   // 🔥 restart auto-scroll after render
-  }
+    startAutoScroll(); // restart auto-scroll after render
+}
+
 
   /* ===============================
      LOAD PRODUCTS

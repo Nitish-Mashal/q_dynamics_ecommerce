@@ -1,6 +1,6 @@
 import frappe
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_products_by_tag(tag):
     products = frappe.db.sql("""
         SELECT
@@ -28,8 +28,7 @@ def get_products_by_tag(tag):
 
     return products
 
-
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_product_tags():
     return frappe.db.sql("""
         SELECT DISTINCT tag

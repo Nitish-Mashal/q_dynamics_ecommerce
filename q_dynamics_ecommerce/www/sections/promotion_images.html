@@ -1,0 +1,146 @@
+{% set promotions = frappe.db.sql("""
+    SELECT
+        pi.name1,
+        pi.date,
+        pi.is_active,
+        pi.link,
+        pi.attach_image
+    FROM `tabPromotion Images` pi
+    WHERE pi.is_active = 1
+    ORDER BY pi.date DESC
+    LIMIT 10
+""", as_dict=True) %}
+
+{% if promotions %}
+<section class="container my-4">
+
+  <!-- Wrapper -->
+  <div class="promotion-wrapper">
+
+    <!-- Left Arrow -->
+    <button class="promotion-btn prev">‹</button>
+
+    <!-- Scroll Container -->
+    <div class="promotion-scroll">
+
+      {% for promo in promotions %}
+      <div class="promotion-card">
+        <a href="{{ promo.link }}" target="_blank" class="text-decoration-none">
+
+          <div class="card border rounded-4 shadow-sm position-relative">
+            <img src="{{ promo.attach_image }}"
+                 class="img-fluid promotion-img"
+                 alt="{{ promo.name1 }}">
+          </div>
+
+        </a>
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- Right Arrow -->
+    <button class="promotion-btn next">›</button>
+
+  </div>
+</section>
+{% endif %}
+
+<style>
+.promotion-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.promotion-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: hidden;
+  padding: 10px 50px;
+  scroll-behavior: smooth;
+}
+
+.promotion-card {
+  flex: 0 0 auto;
+  width: 500px;
+}
+
+.promotion-img {
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Arrow buttons */
+.promotion-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.15);
+  color: #fff;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 26px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.promotion-btn.prev { left: 0; }
+.promotion-btn.next { right: 0; }
+
+.promotion-card a:hover {
+  text-decoration: none;
+  opacity: 0.9;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const container = document.querySelector(".promotion-scroll");
+  const prevBtn = document.querySelector(".promotion-btn.prev");
+  const nextBtn = document.querySelector(".promotion-btn.next");
+
+  const CARD_WIDTH = 276; // card width + gap
+  let autoScrollInterval;
+  let isPaused = false;
+
+  function startAutoScroll() {
+    stopAutoScroll();
+    autoScrollInterval = setInterval(() => {
+      if (!isPaused) {
+        container.scrollLeft += CARD_WIDTH;
+
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
+          container.scrollLeft = 0;
+        }
+      }
+    }, 3000);
+  }
+
+  function stopAutoScroll() {
+    clearInterval(autoScrollInterval);
+  }
+
+  startAutoScroll();
+
+  function pauseAndResume() {
+    isPaused = true;
+    setTimeout(() => isPaused = false, 3000);
+  }
+
+  nextBtn.addEventListener("click", () => {
+    container.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
+    pauseAndResume();
+  });
+
+  prevBtn.addEventListener("click", () => {
+    container.scrollBy({ left: -CARD_WIDTH, behavior: "smooth" });
+    pauseAndResume();
+  });
+
+});
+</script>
