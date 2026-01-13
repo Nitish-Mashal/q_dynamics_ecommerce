@@ -1,83 +1,53 @@
-{% if products and products|length %}
+<section class="container my-5" id="products-by-tag-section">
 
-<section class="container my-5">
+  <!-- Heading Row -->
+  <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
 
-  <!-- Heading -->
-  <div class="position-relative mb-3">
-    <h4 class="mb-0 text-center">{{ title }}</h4>
-    <a href="/all-products"
-       class="position-absolute top-50 end-0 translate-middle-y text-decoration-none text-black small">
+    <!-- Empty div for left alignment (optional) -->
+    <div></div>
+
+    <!-- Centered Tag Buttons -->
+    <div class="d-flex justify-content-center gap-2 flex-wrap" id="tag-buttons"></div>
+
+    <!-- View All button aligned right -->
+    <a href="/all-products" class="text-decoration-none text-black small ms-2">
       View All
     </a>
+    
   </div>
 
-  <!-- Wrapper -->
+  <!-- PRODUCT WRAPPER -->
   <div class="product-wrapper">
 
-    <!-- Left Arrow -->
     <button class="product-btn prev">‹</button>
 
-    <!-- Scroll Container -->
-    <div class="product-scroll">
+    <div class="product-scroll" id="product-scroll"></div>
 
-      {% for item in products %}
-        <div class="product-card">
-        <a href="{{ item.route }}" class="text-decoration-none text-dark d-block h-100">
-            <div class="card h-100 border rounded-4 shadow-sm position-relative p-3">
-
-            <!-- Name -->
-            <div class="fw-semibold text-center mb-1">
-                {{ item.item_name }}
-            </div>
-
-            <!-- Rating -->
-            <div class="d-flex justify-content-center gap-1 mb-2">
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-                <small class="text-muted ms-1">(7)</small>
-            </div>
-
-            <!-- Image -->
-            <div class="d-flex justify-content-center mb-3">
-                <img src="{{ item.image or '/assets/frappe/images/no-image.png' }}"
-                    class="img-fluid product-img"
-                    alt="{{ item.item_name }}">
-            </div>
-
-            <!-- Price -->
-            <p class="fw-bold text-center mb-1">
-                ₹ {{ item.standard_rate }}
-            </p>
-
-            <p class="text-muted text-center small mb-0">
-                93 Purchases
-            </p>
-
-            </div>
-        </a>
-        </div>
-
-      {% endfor %}
-
-    </div>
-
-    <!-- Right Arrow -->
     <button class="product-btn next">›</button>
 
   </div>
 </section>
-
-{% endif %}
-
 
 <style>
 .product-wrapper {
   position: relative;
   display: flex;
   align-items: center;
+}
+/* Ensure product names wrap properly inside the card */
+.product-card .fw-semibold {
+    white-space: normal;        
+    word-break: break-word;     
+    overflow: hidden;           
+    text-overflow: ellipsis;    
+    display: -webkit-box;          
+    -webkit-box-orient: vertical;
+}
+.product-card a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
 }
 
 .product-scroll {
@@ -114,54 +84,199 @@
   z-index: 5;
 }
 
+#products-by-tag-section .d-flex.align-items-center {
+  gap: 10px;
+}
+
+#tag-buttons {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#products-by-tag-section a {
+  white-space: nowrap;
+}
+
+
 .product-btn.prev { left: 0; }
 .product-btn.next { right: 0; }
 </style>
 
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  const container = document.querySelector(".product-scroll");
+  const section = document.getElementById("products-by-tag-section");
+  const productScroll = document.getElementById("product-scroll");
+  const tagButtons = document.getElementById("tag-buttons");
   const prevBtn = document.querySelector(".product-btn.prev");
   const nextBtn = document.querySelector(".product-btn.next");
 
   const CARD_WIDTH = 276;
-  let autoScrollInterval;
+  let autoScrollTimer = null;
   let isPaused = false;
 
+  /* ===============================
+     AUTO SCROLL
+  =============================== */
   function startAutoScroll() {
     stopAutoScroll();
-    autoScrollInterval = setInterval(() => {
-      if (!isPaused) {
-        container.scrollLeft += CARD_WIDTH;
+    autoScrollTimer = setInterval(() => {
+      if (isPaused || !productScroll.children.length) return;
 
-        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
-          container.scrollLeft = 0;
-        }
+      const maxScroll =
+        productScroll.scrollWidth - productScroll.clientWidth;
+
+      if (productScroll.scrollLeft >= maxScroll - 5) {
+        productScroll.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        productScroll.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
       }
     }, 3000);
   }
 
   function stopAutoScroll() {
-    clearInterval(autoScrollInterval);
+    if (autoScrollTimer) clearInterval(autoScrollTimer);
   }
 
-  startAutoScroll();
-
-  function pauseAndResume() {
+  function pauseAutoScroll() {
     isPaused = true;
-    setTimeout(() => isPaused = false, 3000);
+    setTimeout(() => (isPaused = false), 3000);
   }
 
+  /* ===============================
+     RENDER PRODUCTS
+  =============================== */
+  function renderProducts(products) {
+    productScroll.innerHTML = "";
+
+    if (!products || !products.length) {
+      productScroll.innerHTML = `
+        <p class="text-muted text-center w-100">
+          No products found
+        </p>`;
+      stopAutoScroll();
+      return;
+    }
+
+    products.forEach(item => {
+      productScroll.insertAdjacentHTML("beforeend", `
+        <div class="product-card">
+
+          <div class="card h-100 border rounded-4 shadow-sm position-relative p-3">
+
+            <a href="${item.route}" class="text-decoration-none text-dark">
+
+              <!-- Product Name -->
+              <div class="fw-semibold text-center mb-1">
+                ${item.item_name}
+              </div>
+
+              <!-- Rating -->
+              <div class="d-flex justify-content-center gap-1 mb-2">
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star text-warning"></i>
+                <small class="text-muted ms-1">(7)</small>
+              </div>
+
+              <!-- Image -->
+              <div class="d-flex justify-content-center mb-3">
+                <img src="${item.image}" class="img-fluid product-img" alt="${item.item_name}">
+              </div>
+
+              <!-- Price -->
+              ${item.standard_rate 
+                ? `<p class="fw-bold text-center mb-1">₹ ${item.standard_rate}</p>` 
+                : `<p class="text-muted text-center mb-1">Price Not Available</p>`}
+
+              <!-- Purchases -->
+              <p class="text-muted text-center small mb-0">93 Purchases</p>
+
+            </a>
+
+            <!-- Optional Wishlist Button -->
+            <!--
+            <button class="btn btn-link p-0 heart-btn" onclick="event.preventDefault(); addToWishlist('${item.item_code}','${item.item_name}');">
+              <i class="bi bi-heart text-danger fs-5"></i>
+            </button>
+            -->
+
+          </div>
+
+        </div>
+      `);
+    });
+
+    productScroll.scrollLeft = 0;
+    startAutoScroll(); // restart auto-scroll after render
+}
+
+
+  /* ===============================
+     LOAD PRODUCTS
+  =============================== */
+  function loadProducts(tag) {
+    stopAutoScroll();
+    frappe.call({
+      method: "q_dynamics_ecommerce.api.products.get_products_by_tag",
+      args: { tag },
+      callback: r => {
+        renderProducts(r.message || []);
+      }
+    });
+  }
+
+  /* ===============================
+     LOAD TAGS
+  =============================== */
+  frappe.call({
+    method: "q_dynamics_ecommerce.api.products.get_product_tags",
+    callback: r => {
+
+      if (!r.message || !r.message.length) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+
+      r.message.forEach((t, index) => {
+        const btn = document.createElement("button");
+        btn.className = `btn btn-sm ${index === 0 ? 'btn-dark' : 'btn-outline-dark'}`;
+        btn.innerText = t.tag;
+
+        btn.onclick = () => {
+          document
+            .querySelectorAll("#tag-buttons button")
+            .forEach(b => b.classList.replace("btn-dark", "btn-outline-dark"));
+
+          btn.classList.replace("btn-outline-dark", "btn-dark");
+          loadProducts(t.tag);
+          pauseAutoScroll();
+        };
+
+        tagButtons.appendChild(btn);
+
+        if (index === 0) loadProducts(t.tag);
+      });
+    }
+  });
+
+  /* ===============================
+     ARROWS (NOW WORKING)
+  =============================== */
   nextBtn.addEventListener("click", () => {
-    container.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
-    pauseAndResume();
+    productScroll.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
+    pauseAutoScroll();
   });
 
   prevBtn.addEventListener("click", () => {
-    container.scrollBy({ left: -CARD_WIDTH, behavior: "smooth" });
-    pauseAndResume();
+    productScroll.scrollBy({ left: -CARD_WIDTH, behavior: "smooth" });
+    pauseAutoScroll();
   });
 
 });
