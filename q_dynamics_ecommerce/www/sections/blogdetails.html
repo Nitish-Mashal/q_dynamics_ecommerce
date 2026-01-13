@@ -1,0 +1,95 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+
+<div class="py-2">
+    <!-- Loading -->
+    <div id="loading" class="text-center py-2 text-muted fs-5">
+        Loading blog details...
+    </div>
+
+    <!-- Blog Details -->
+    <div id="blog-details" class=" d-none">
+
+        <h3 id="blog-title" class="fw-bold mb-3 mt-2"></h3>
+
+        <img id="blog-image" class="img-fluid rounded mb-4 w-100" style="max-height:450px; object-fit:cover;"
+            alt="Blog Image" />
+
+        <div id="blog-content" class=""></div>
+
+    </div>
+</div>
+
+<script>
+    // Get blog name from query param
+    // const params = new URLSearchParams(window.location.search);
+    // const blogName = params.get("blog_name");
+
+    const blogName = new URLSearchParams(window.location.search).get("blog_name");
+
+    if (!blogName) {
+        document.getElementById("loading").innerText = "Blog not found";
+        console.error("Missing blog_name in URL");
+    } else {
+
+        fetch(`/api/method/q_dynamics_ecommerce.api.blogs.get_blog?blog_name=${encodeURIComponent(blogName)}`)
+            .then(res => res.json())
+            .then(res => {
+                const blog = res.message;
+
+                if (!blog || !blog.name) {
+                    document.getElementById("loading").innerText = "Blog not found";
+                    return;
+                }
+
+                // Set title
+                document.getElementById("blog-title").innerText =
+                    blog.description_heading_1_h3 || "";
+
+                // Set image
+                const blogImage = document.getElementById("blog-image");
+                if (blog.header_image || blog.thumbnail_image) {
+                    blogImage.src = blog.header_image || blog.thumbnail_image;
+                } else {
+                    blogImage.classList.add("d-none");
+                }
+
+                // Set content (rich HTML safe)
+                document.getElementById("blog-content").innerHTML = `
+                    ${blog.description_heading_2 ? `<h3 >${blog.description_heading_2}</h3>` : ""}
+                    ${blog.description_1 || ""}
+
+                    ${blog.description_heading_3 ? `<h3 >${blog.description_heading_3}</h3>` : ""}
+                    ${blog.description_2 || ""}
+
+                    ${blog.description_heading_4 ? `<h3 >${blog.description_heading_4}</h3>` : ""}
+                    ${blog.description_3 || ""}
+
+                    ${blog.custom_html || ""}
+                `;
+
+                document.getElementById("loading").classList.add("d-none");
+                document.getElementById("blog-details").classList.remove("d-none");
+            })
+            .catch(err => {
+                console.error("Blog API error:", err);
+                document.getElementById("loading").innerText = "Error loading blog";
+            });
+    }
+</script>
+
+<style scoped>
+    .blog-content img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    @media (min-width: 1200px) {
+        h3 {
+            font-size: 1.9rem;
+            margin-top: 2rem !important;
+        }
+    }
+</style>
+
+{% endblock %}

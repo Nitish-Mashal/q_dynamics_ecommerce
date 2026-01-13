@@ -64,9 +64,9 @@
     }
 
     /* About section */
-    .about-section {
+    /* .about-section {
         padding: 60px 0;
-    }
+    } */
 
     .about-section h4 {
         font-weight: 600;
@@ -112,9 +112,9 @@
     }
 
     /* Why us */
-    .why-us {
+    /* .why-us {
         padding: 50px 0;
-    }
+    } */
 
     .why-us li {
         list-style: none;
@@ -129,35 +129,46 @@
         margin-right: 8px;
     }
 
-    .help-banner {
-        background-color: #00a79d;
-        border-radius: 22px;
-        padding: 24px 30px;
+    .whatsapp-bg {
+        background-color: #00a9a2;
+    }
+
+    .no-underline {
+        text-decoration: none;
+    }
+
+    .whatsapp-card {
+        border-radius: 24px;
+        padding: 2rem;
         color: #fff;
-        max-width: 650px;
-        margin: 40px auto;
     }
 
-    .help-title {
+    .headline {
         font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 6px;
+        line-height: 1.2;
     }
 
-    .help-subtitle {
-        font-size: 15px;
-        opacity: 0.95;
+    .subtext {
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: 300;
     }
 
-    .whatsapp-icon {
-        width: 80px;
-        height: 80px;
-        border: 2px solid #fff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
+    @media (min-width: 768px) {
+        .headline {
+            font-size: 30px;
+        }
+
+        .subtext {
+            font-size: 20px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        h4 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem !important;
+        }
     }
 </style>
 
@@ -260,7 +271,7 @@
         <h4 style="margin-bottom: 30px; ">Why You Should Choose Us</h4>
         <div class="row g-4 justify-content-first">
             <!-- Point 1 -->
-            <div class="col-md-4 d-flex ">
+            <div class="col-md-4 d-flex py-2">
                 <div class="icon-circle me-3">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" width="24"
                         height="24">
@@ -268,7 +279,7 @@
                             d="M12 3v2m0 14v2m8-8h2M2 12H0m15.364-6.364l1.414 1.414M4.222 19.778l1.414-1.414M19.778 19.778l-1.414-1.414M4.222 4.222l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
                     </svg>
                 </div>
-                <span>Holistic Healing</span>
+                <span class="p-1">Holistic Healing</span>
             </div>
 
             <!-- Point 2 -->
@@ -281,7 +292,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7v10" />
                     </svg>
                 </div>
-                <span>Authentic Formulations</span>
+                <span class="p-1">Authentic Formulations</span>
             </div>
 
             <!-- Point 3 -->
@@ -293,7 +304,7 @@
                             d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M12 12a4 4 0 100-8 4 4 0 000 8z" />
                     </svg>
                 </div>
-                <span>Expert Practitioners</span>
+                <span class="p-1">Expert Practitioners</span>
             </div>
 
             <!-- Point 4 -->
@@ -305,7 +316,7 @@
                             d="M12 3v6m0 6v6m6-6h6M6 12H0M16 8l4 4M4 16l4-4" />
                     </svg>
                 </div>
-                <span>Personalized Wellness</span>
+                <span class="p-1">Personalized Wellness</span>
             </div>
 
             <!-- Point 5 -->
@@ -317,7 +328,7 @@
                             d="M14 7V3M10 7V3M5 21h14l-1-9H6l-1 9z" />
                     </svg>
                 </div>
-                <span>Herbal Therapies</span>
+                <span class="p-1">Herbal Therapies</span>
             </div>
 
             <!-- Point 6 -->
@@ -329,7 +340,7 @@
                             d="M12 3v2m0 14v2m8-8h2M2 12H0m15.364-6.364l1.414 1.414M4.222 19.778l1.414-1.414M19.778 19.778l-1.414-1.414M4.222 4.222l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z" />
                     </svg>
                 </div>
-                <span>Natural Vitality</span>
+                <span class="p-1">Natural Vitality</span>
             </div>
         </div>
     </div>
